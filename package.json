@@ -1,0 +1,20 @@
+{
+  "name": "safe-hack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gnosis.pm/safe-core-sdk": "^3.0.0",
+    "@gnosis.pm/safe-ethers-lib": "^1.5.0",
+    "@gnosis.pm/safe-service-client": "^1.2.0",
+    "dotenv": "^16.0.2",
+    "ethers": "^5.7.0"
+  }
+}
