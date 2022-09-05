@@ -1,5 +1,0 @@
-ds-test/=lib/solmate/lib/ds-test/src/
-forge-std/=lib/forge-std/src/
-openzeppelin-contracts/=lib/openzeppelin-contracts/
-solmate/=lib/solmate/src/
-zodiac-module-exit/=lib/zodiac-module-exit/
