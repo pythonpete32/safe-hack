@@ -10,7 +10,7 @@ import { task, types } from "hardhat/config";
 
 import hre, { ethers } from 'hardhat'
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-
+import { BigNumber } from '@ethersproject/bignumber'
 async function main() {
 
   // admin
@@ -47,10 +47,40 @@ async function main() {
     values: [adminAddress, safeAddress, safeAddress, tokenAddress, supplyTokenAddress]
   }
 
+  interface SafeTransaction {
+    data: string;
+    to: string;
+    value: BigNumber
+  }
+
+  interface ModuleType {
+    transaction: SafeTransaction;
+    expectedModuleAddress: string;
+  }
+
+
   enum KnownContracts { EXIT_ERC20 = "exit" }
 
-  const tx = deployAndSetUpModule(KnownContracts.EXIT_ERC20, types, provider, 5, String(Date.now()))
-  console.log("Safe Tx: ", tx)
+  const { transaction, expectedModuleAddress }: ModuleType = deployAndSetUpModule(KnownContracts.EXIT_ERC20, types, provider, 5, String(Date.now()))
+  console.log(`
+    transaction: ${JSON.stringify(transaction, null, 2)}
+    expectedModuleAddress: ${expectedModuleAddress}
+  `)
+
+  const safeTransaction = await safeSdk.createTransaction({ safeTransactionData: { ...transaction, value: "0" } })
+  console.log(`safeTransaction: ${JSON.stringify(safeTransaction, null, 2)}`)
+  const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction)
+
+  // propose transaction to relayer
+  const senderSignature = await safeSdk.signTransactionHash(safeTransactionHash)
+  const safeService = new SafeServiceClient({ txServiceUrl: 'https://safe-transaction.goerli.gnosis.io/', ethAdapter })
+  await safeService.proposeTransaction({
+    safeAddress: safeSdk.getAddress(),
+    safeTransactionData: safeTransaction.data,
+    safeTxHash: safeTransactionHash,
+    senderAddress: adminAddress,
+    senderSignature: senderSignature.data,
+  })
 
 }
 
