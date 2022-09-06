@@ -47,7 +47,10 @@ export const CONTRACT_ADDRESSES: Record<
     [KnownContracts.OPTIMISTIC_GOVERNOR]:
       "0x6Ff461b854F5349857c2Ad41e0f558C19953DF89",
   },
-  5: { ...MasterCopyAddresses },
+  5: {
+    ...MasterCopyAddresses,
+    [KnownContracts.FACTORY]: '0x2489bbA10DBcD710b73C2B19C16202ef74a5e958'
+  },
   56: { ...MasterCopyAddresses },
   100: { ...MasterCopyAddresses },
   137: {
